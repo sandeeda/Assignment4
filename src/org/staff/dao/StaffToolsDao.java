@@ -16,7 +16,6 @@ public class StaffToolsDao {
 	private Connection connection;
 	public StaffToolsDao() {
 		// TODO Auto-generated constructor stub
-		System.out.println("Here");
 		createConnection();
 	}
 	public boolean createConnection() {

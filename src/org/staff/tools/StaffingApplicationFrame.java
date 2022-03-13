@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
@@ -68,16 +69,21 @@ public class StaffingApplicationFrame extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			if (e.getSource() == insertButton) {
-				
-				Staff insertStaff = new Staff(IDTextField.getText(), lastNameTextField.getText(), firstNameTextField.getText(), sexTextField.getText(), addressTextField.getText(), cityTextField.getText(), stateTextField.getText(), telephoneTextField.getText(), IDTextField.getText()+"@humber.ca");
-				try {
-					staffToolsDao.insertRecord(insertStaff);
-					connectivityLabel.setText("1 row updated");
-				} catch (SQLIntegrityConstraintViolationException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					connectivityLabel.setText("Duplicate primary key!");
+				if(validateData()) {
+					Staff insertStaff = new Staff(IDTextField.getText(), lastNameTextField.getText(), firstNameTextField.getText(), sexTextField.getText(), addressTextField.getText(), cityTextField.getText(), stateTextField.getText(), telephoneTextField.getText(), IDTextField.getText()+"@humber.ca");
+					try {
+						staffToolsDao.insertRecord(insertStaff);
+						connectivityLabel.setText("1 row updated");
+					} catch (SQLIntegrityConstraintViolationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+						connectivityLabel.setText("Duplicate primary key!");
+					}
 				}
+				else {
+					JOptionPane.showMessageDialog(null, "Invalid data");
+				}
+				
 				
 			}
 			
@@ -116,6 +122,7 @@ public class StaffingApplicationFrame extends JFrame {
 				lastNameTextField.setText("");
 				IDTextField.setText("");
 				cityTextField.setText("");
+				addressTextField.setText("");
 				sexTextField.setText("");
 				telephoneTextField.setText("");
 				stateTextField.setText("");
@@ -124,6 +131,22 @@ public class StaffingApplicationFrame extends JFrame {
 				}
 			}
 
+		}
+
+		private boolean validateData() {
+			// TODO Auto-generated method stub
+			if((IDTextField.getText().length()<10 && IDTextField.getText().length()>0 && IDTextField.getText()!=null)
+					&& (lastNameTextField.getText().length()<16 && lastNameTextField.getText().length()>0 && lastNameTextField.getText()!=null)
+					&& (firstNameTextField.getText().length()<16 && firstNameTextField.getText().length()>0 && firstNameTextField.getText()!=null)
+					&& (sexTextField.getText().equalsIgnoreCase("m") || sexTextField .getText().equalsIgnoreCase("f"))
+					&& (addressTextField.getText().length()<=20 && addressTextField.getText().length()>0 && addressTextField.getText()!=null) 
+					&& (cityTextField.getText().length()<=20 && cityTextField.getText().length()>0 && cityTextField.getText()!=null)
+					&& (stateTextField.getText().length()==2 && stateTextField.getText()!=null)
+					&& (telephoneTextField.getText().length()==10))
+			{
+				return true;
+			}
+			return false;
 		}
 
 	}
