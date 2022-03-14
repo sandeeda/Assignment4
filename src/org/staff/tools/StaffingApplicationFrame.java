@@ -1,17 +1,25 @@
+/*************************************************************************************************
+*  Course_Name – Assignment x                                                                                                                                *
+
+*  I declare that this assignment is my own work in accordance with Humber Academic Policy.        *
+
+*  No part of this assignment has been copied manually or electronically from any other source       *
+
+*  (including web sites) or distributed to other students/social media.                                                       *
+                                                                                                                                                                             
+*  Name: Sandeep Das Student ID: N01472825 Date: 13th Mar 2022  		          
+*/
 package org.staff.tools;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,12 +29,12 @@ import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.humber.SQLInfo.OracleInfo;
 import org.staff.dao.StaffToolsDao;
 import org.staff.entity.Staff;
 
 public class StaffingApplicationFrame extends JFrame {
 
+	//Creating the panel and the components for input fields
 	JPanel staffInformationPanel;
 	JLabel IDLabel;
 	JTextField IDTextField;
@@ -52,6 +60,8 @@ public class StaffingApplicationFrame extends JFrame {
 	JLabel telephoneLabel;
 	JTextField telephoneTextField;
 
+	
+	//Create to operations panel and its buttons
 	JPanel operationsPanel;
 	JButton viewButton;
 	JButton insertButton;
@@ -59,17 +69,24 @@ public class StaffingApplicationFrame extends JFrame {
 	JButton clearButton;
 	JLabel connectivityLabel;
 	
-	
+	//Create the listener
 	ActionListener listener;
+	//Create the object for accessing methods of DAO implementations
 	StaffToolsDao staffToolsDao;
 
+	
+	//inner class implementing action listener
 	class StaffToolActionListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
+			
+			//Event handling defined for insert button
 			if (e.getSource() == insertButton) {
+				//validate data if the data is okay
 				if(validateData()) {
+					//if data is valid, read the data from fields, create a staff object and use the DAO tools for inserting the data
 					Staff insertStaff = new Staff(IDTextField.getText(), lastNameTextField.getText(), firstNameTextField.getText(), sexTextField.getText(), addressTextField.getText(), cityTextField.getText(), stateTextField.getText(), telephoneTextField.getText(), IDTextField.getText()+"@humber.ca");
 					try {
 						staffToolsDao.insertRecord(insertStaff);
@@ -81,16 +98,20 @@ public class StaffingApplicationFrame extends JFrame {
 					}
 				}
 				else {
+					//If data is invalid, show error message to user
 					JOptionPane.showMessageDialog(null, "Invalid data");
 				}
 				
 				
 			}
 			
+			//Handle event for view button
 			if(e.getSource() == viewButton) {
 				Staff getStaff;
 				
+				//Check if the ID exists n DB using the findStaff method
 				getStaff = staffToolsDao.findStaff(IDTextField.getText());
+				//check if the getStaff object is populated
 				if(getStaff!=null) {
 				lastNameTextField.setText(getStaff.getLastName());
 				firstNameTextField.setText(getStaff.getFirstName());
@@ -99,14 +120,17 @@ public class StaffingApplicationFrame extends JFrame {
 				cityTextField.setText(getStaff.getCity());
 				addressTextField.setText(getStaff.getAddress());
 				stateTextField.setText(getStaff.getState());
+				//Update the connectivity Label
 				connectivityLabel.setText("Staff ID: "+IDTextField.getText()+" found");
 				}
 				else
 					connectivityLabel.setText("No record found");
 			}
 			
+			//Check if update button was pressed
 			if(e.getSource() == updateButton) {
 				Staff updateStaff = new Staff();
+				//Populate a staff object with the text field values and call the DAO method to update using ID
 				updateStaff = staffToolsDao.findStaff(IDTextField.getText());
 				updateStaff.setFirstName(firstNameTextField.getText());
 				updateStaff.setLastName(lastNameTextField.getText());
@@ -116,8 +140,10 @@ public class StaffingApplicationFrame extends JFrame {
 				staffToolsDao.updateRecordById(updateStaff); 
 				connectivityLabel.setText("1 row updated");
 			}
-			
+			//Check if clear button was pressed
 			if(e.getSource() == clearButton) {
+				
+				//Clear text fields and set them to blank
 				firstNameTextField.setText("");
 				lastNameTextField.setText("");
 				IDTextField.setText("");
@@ -135,6 +161,7 @@ public class StaffingApplicationFrame extends JFrame {
 
 		private boolean validateData() {
 			// TODO Auto-generated method stub
+			//Simple if nests to validate length of data and not null parameters
 			if((IDTextField.getText().length()<10 && IDTextField.getText().length()>0 && IDTextField.getText()!=null)
 					&& (lastNameTextField.getText().length()<16 && lastNameTextField.getText().length()>0 && lastNameTextField.getText()!=null)
 					&& (firstNameTextField.getText().length()<16 && firstNameTextField.getText().length()>0 && firstNameTextField.getText()!=null)
@@ -151,9 +178,15 @@ public class StaffingApplicationFrame extends JFrame {
 
 	}
 
+	//Constructor
 	public StaffingApplicationFrame() {
+		//Creating listener object
 		listener = new StaffToolActionListener();
+		
+		//creating StaffToolsDao object
 		staffToolsDao = new StaffToolsDao();
+		
+		//create panels and pack them
 		createStaffInformationPanel();
 		createOperationsPanel();
 		bundleLayout();
@@ -176,6 +209,8 @@ public class StaffingApplicationFrame extends JFrame {
 	 */
 	private void bundleLayout() {
 		// TODO Auto-generated method stub
+		
+		//Pack the layout , add an icon
 		setSize(500,300);
 		setTitle("Staff DB tool");
 		Image icon = Toolkit.getDefaultToolkit().getImage("C:\\Users\\sdsts\\Documents\\workspace-spring-tool-suite-4-4.13.0.RELEASE\\Assignment04N01472825\\icon\\db.png");   
@@ -184,6 +219,7 @@ public class StaffingApplicationFrame extends JFrame {
 		add(staffInformationPanel, BorderLayout.NORTH);
 	}
 
+	//create the operations panel
 	private void createOperationsPanel() {
 		// TODO Auto-generated method stub
 		operationsPanel = new JPanel();
@@ -214,6 +250,7 @@ public class StaffingApplicationFrame extends JFrame {
 
 	}
 
+	//create the info input panel
 	private void createStaffInformationPanel() {
 		// TODO Auto-generated method stub
 
@@ -223,6 +260,7 @@ public class StaffingApplicationFrame extends JFrame {
 
 		IDLabel = new JLabel("ID");
 		IDTextField = new JTextField(20);
+		IDTextField.setBackground(Color.YELLOW);
 
 		lastNameLabel = new JLabel("Last Name");
 		lastNameTextField = new JTextField(20);

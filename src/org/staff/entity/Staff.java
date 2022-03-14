@@ -1,8 +1,23 @@
+/*************************************************************************************************
+*  Course_Name – Assignment x                                                                                                                                *
+
+*  I declare that this assignment is my own work in accordance with Humber Academic Policy.        *
+
+*  No part of this assignment has been copied manually or electronically from any other source       *
+
+*  (including web sites) or distributed to other students/social media.                                                       *
+                                                                                                                                                                             
+*  Name: Sandeep Das Student ID: N01472825 Date: 13th Mar 2022  		          
+*/
+
+
+//Staff Entity type
 package org.staff.entity;
 
 public class Staff {
 
-	String id;
+	//Attributes
+	String id;	//Primary Key
 	String lastName;
 	String firstName;
 	String gender;
@@ -11,6 +26,8 @@ public class Staff {
 	String state;
 	String telephone;
 	String email;
+	
+	//Getters and setters
 	public String getId() {
 		return id;
 	}
@@ -65,10 +82,14 @@ public class Staff {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	//Super Constructor
 	public Staff() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	//Parameterized constructor
 	public Staff(String id, String lastName, String firstName, String gender, String address, String city, String state,
 			String telephone, String email) {
 		super();
@@ -82,6 +103,9 @@ public class Staff {
 		this.telephone = telephone;
 		this.email = email;
 	}
+	
+	
+	//Override toString
 	@Override
 	public String toString() {
 		return "Staff [id=" + id + ", lastName=" + lastName + ", firstName=" + firstName + ", gender=" + gender
